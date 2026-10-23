@@ -1,6 +1,6 @@
 # Mini Alarm Board
 
-This project was built to learn .NET Core API, SignalR, C#, OOP, DI and real-time .NET. Was getting ready for an interview so, making a small application which generates fake industrial alarms, pushes them to clients over SignalR, and raises zone alrams when a threshold is breached.
+A small ASP.NET Core Web API built as a learning project. It generates fake industrial alarms, pushes them to connected clients over SignalR, and raises a zone alarm when too many alarms arrive in one area within a time window.
 
 ## Why this exists
 
@@ -16,11 +16,13 @@ without being connected to anything real.
 
 ## How to run it
 
-Coming in Phase 0.
+dotnet run --project
+
+only endpoint so far is GET /weatherforecast
 
 ## Phases
 
-- [ ] Phase 0: environment and project setup
+- [*] Phase 0: environment and project setup
 - [ ] Phase 1: C# language basics
 - [ ] Phase 2: OOP
 - [ ] Phase 3: dependency injection and lifetimes
