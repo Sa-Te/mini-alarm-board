@@ -10,9 +10,9 @@ without being connected to anything real.
 
 ## Stack
 
-- .NET 10, ASP.NET Core Web API
-- SignalR for real-time push
-- xUnit for tests
+* .NET 10, ASP.NET Core Web API
+* SignalR for real-time push
+* xUnit for tests
 
 ## How to run it
 
@@ -22,18 +22,19 @@ only endpoint so far is GET /weatherforecast
 
 ## Phases
 
-- [*] Phase 0: environment and project setup
-- [*] Phase 1: C# language basics
-- [*] Phase 2: OOP
-- [ ] Phase 3: dependency injection and lifetimes
-- [ ] Phase 4: async and background work
-- [ ] Phase 5: SignalR
-- [ ] Phase 6: design patterns
-- [ ] Phase 7: zone detector
-- [ ] Phase 8: AI insight layer
-- [ ] Phase 9: testing
-- [ ] Phase 10: review
+* \[\*] Phase 0: environment and project setup
+* \[\*] Phase 1: C# language basics
+* \[\*] Phase 2: OOP
+* \[\*] Phase 3: dependency injection and lifetimes
+* \[ ] Phase 4: async and background work
+* \[ ] Phase 5: SignalR
+* \[ ] Phase 6: design patterns
+* \[ ] Phase 7: zone detector
+* \[ ] Phase 8: AI insight layer
+* \[ ] Phase 9: testing
+* \[ ] Phase 10: review
 
 ## Notes and decisions
 
-Nothing yet.
+* store is a singleton because the generator and the controller must share the same state, and a singleton cannot hold a scoped service because that instance would be captured for the life of the app.
+
