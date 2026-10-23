@@ -23,8 +23,8 @@ only endpoint so far is GET /weatherforecast
 ## Phases
 
 - [*] Phase 0: environment and project setup
-- [ ] Phase 1: C# language basics
-- [ ] Phase 2: OOP
+- [*] Phase 1: C# language basics
+- [*] Phase 2: OOP
 - [ ] Phase 3: dependency injection and lifetimes
 - [ ] Phase 4: async and background work
 - [ ] Phase 5: SignalR
