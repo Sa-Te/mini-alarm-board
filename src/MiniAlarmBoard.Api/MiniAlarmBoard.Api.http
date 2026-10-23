@@ -1,0 +1,6 @@
+@MiniAlarmBoard.Api_HostAddress = http://localhost:5014
+
+GET {{MiniAlarmBoard.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
