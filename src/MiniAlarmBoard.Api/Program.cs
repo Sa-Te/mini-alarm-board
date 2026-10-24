@@ -1,4 +1,6 @@
 using MiniAlarmBoard.Api.Storage;
+using MiniAlarmBoard.Api.Services;
+using MiniAlarmBoard.Api.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,7 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddSingleton<IAlarmStore, InMemoryAlarmStore>();
+builder.Services.AddHostedService<AlarmGenerator>();
 
 var app = builder.Build();
 
