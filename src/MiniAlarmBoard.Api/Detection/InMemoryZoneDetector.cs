@@ -1,4 +1,3 @@
-using System.Formats.Asn1;
 using Microsoft.Extensions.Options;
 using MiniAlarmBoard.Api.Models;
 
@@ -6,7 +5,7 @@ namespace MiniAlarmBoard.Api.Detection;
 
 public class InMemoryZoneDetector : IZoneDetector
 {
-    private readonly object _lock = new();
+    private readonly object _gate = new();
     private readonly Dictionary<string, List<DateTimeOffset>> _recentAlarms = new();
     private readonly HashSet<string> _overThresholdAreas = new();
     private readonly IOptions<ZoneDetectorOptions> _options;
@@ -28,7 +27,7 @@ public class InMemoryZoneDetector : IZoneDetector
         var threshold = options.Threshold;
         var now = _clock.GetUtcNow();
 
-        lock (_lock)
+        lock (_gate)
         {
             if (!_recentAlarms.TryGetValue(alarm.Area, out var alarmTimes))
             {

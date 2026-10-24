@@ -22,7 +22,17 @@
         document.getElementById("alarms").prepend(li);
       }
 
+      function showZoneAlarm(alarm) {
+        console.log("Zone Alarm", zoneAlarm);
+        const li = document.createElement("li");
+
+        li.textContent = `${zoneAlarm.raisedAt} ${zoneAlarm.area} ${zoneAlarm.alarmCount} alarms in ${zoneAlarm.windowSeconds}s`;
+
+        document.getElementById("zoneAlarms").prepend(li);
+      }
+
       connection.on("AlarmRaised", showAlarm);
+      connection.on("ZoneAlarmRaised", showZoneAlarm);
 
       connection.onreconnected(() =>
         connection.invoke("WatchArea", "Sector 7 Foundry"),
