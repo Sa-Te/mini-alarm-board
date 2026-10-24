@@ -23,7 +23,6 @@
       }
 
       connection.on("AlarmRaised", showAlarm);
-      connection.on("alarmRaised", showAlarm);
 
       connection.onreconnected(() =>
         connection.invoke("WatchArea", "Sector 7 Foundry"),

@@ -2,6 +2,8 @@ using MiniAlarmBoard.Api.Storage;
 using MiniAlarmBoard.Api.Services;
 using MiniAlarmBoard.Api.Models;
 using MiniAlarmBoard.Api.Hubs;
+using MiniAlarmBoard.Api.Detection;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,9 @@ builder.Services.AddOpenApi();
 builder.Services.AddSingleton<IAlarmStore, InMemoryAlarmStore>();
 builder.Services.AddHostedService<AlarmGenerator>();
 builder.Services.AddSignalR();
+builder.Services.Configure<ZoneDetectorOptions>(builder.Configuration.GetSection(ZoneDetectorOptions.SectionName));
+builder.Services.AddSingleton(TimeProvider.System);
+builder.Services.AddSingleton<IZoneDetector, InMemoryZoneDetector>();
 
 var app = builder.Build();
 
@@ -23,6 +28,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseStaticFiles();
+app.MapControllers();
 app.UseAuthorization();
 
 app.MapHub<AlarmHub>("/hubs/alarms");
