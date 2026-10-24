@@ -1,6 +1,7 @@
 using MiniAlarmBoard.Api.Storage;
 using MiniAlarmBoard.Api.Services;
 using MiniAlarmBoard.Api.Models;
+using MiniAlarmBoard.Api.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddSingleton<IAlarmStore, InMemoryAlarmStore>();
 builder.Services.AddHostedService<AlarmGenerator>();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -20,9 +22,9 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-
+app.UseStaticFiles();
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapHub<AlarmHub>("/hubs/alarms");
 
 app.Run();

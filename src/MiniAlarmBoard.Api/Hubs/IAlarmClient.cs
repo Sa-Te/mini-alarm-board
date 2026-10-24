@@ -1,0 +1,8 @@
+using MiniAlarmBoard.Api.Models;
+
+namespace MiniAlarmBoard.Api.Hubs;
+
+public interface IAlarmClient
+{
+    Task AlarmRaised(Alarm alarm);
+}
