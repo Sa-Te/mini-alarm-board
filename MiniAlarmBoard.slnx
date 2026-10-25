@@ -2,4 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/MiniAlarmBoard.Api/MiniAlarmBoard.Api.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MiniAlarmBoard.Tests/MiniAlarmBoard.Tests.csproj" />
+  </Folder>
 </Solution>
