@@ -44,8 +44,8 @@ WindowSeconds or Threshold needs an app restart but no rebuild.
 - \[\*] Phase 5: SignalR
 - \[\*] Phase 6: design patterns
 - \[\*] Phase 7: zone detector
-- \[ ] Phase 8: AI insight layer
-- \[ ] Phase 9: testing
+- \[\*] Phase 8: AI insight layer
+- \[\*] Phase 9: testing
 - \[ ] Phase 10: review
 
 ## Notes and decisions
@@ -74,3 +74,19 @@ WindowSeconds or Threshold needs an app restart but no rebuild.
   what the insight layer does next.
 - Known smell: the generator is turning into an orchestrator, doing generation, push,
   detection and soon insight. Phase 10 splits this out.
+- The insight layer is one interface with two implementations. A Gemini implementation
+  makes the real call and validates what comes back. A rule-based implementation always
+  works. A decorator falls back to the rule-based one when the call fails or the output
+  does not validate, and the real implementation is only registered when an API key is
+  configured, so the app still runs with no key at all.
+- The fallback was exercised for real by a 503 from the model provider. The log shows the
+  provider warning, then the decorator warning naming the area, then the rule-based
+  summary reaching the client. The app degraded instead of failing.
+- The provider choice is decided at startup and logged, because a silent fallback hid the
+  fact that no key was configured for a while.
+- Zone detector tests use FakeTimeProvider, so a 30 second window is tested by moving the
+  clock forward instead of waiting. Four tests: threshold crossing, suppression while over
+  threshold, areas counted separately, and a second alarm after the window rolls.
+- Known issue: the generator awaits the insight call inside its own loop, so alarm
+  generation pauses while a model call is in flight. In a real system this belongs behind
+  a queue or a separate worker.
