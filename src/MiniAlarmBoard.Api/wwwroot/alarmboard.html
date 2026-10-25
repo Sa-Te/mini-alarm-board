@@ -7,6 +7,12 @@
   <body>
     <h1>Live alarms</h1>
     <ul id="alarms"></ul>
+
+    <h2>Zone alarms</h2>
+    <ul id="zoneAlarms"></ul>
+
+    <h2>Insights</h2>
+    <ul id="insights"></ul>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
     <script>
       const connection = new signalR.HubConnectionBuilder()
@@ -22,7 +28,7 @@
         document.getElementById("alarms").prepend(li);
       }
 
-      function showZoneAlarm(alarm) {
+      function showZoneAlarm(zoneAlarm) {
         console.log("Zone Alarm", zoneAlarm);
         const li = document.createElement("li");
 
@@ -31,8 +37,16 @@
         document.getElementById("zoneAlarms").prepend(li);
       }
 
+      function showInsight(insight) {
+        console.log("insight", insight);
+        const li = document.createElement("li");
+        li.textContent = `${insight.area}: ${insight.summary}. ${insight.recommendation} (${insight.source})`;
+        document.getElementById("insights").prepend(li);
+      }
+
       connection.on("AlarmRaised", showAlarm);
       connection.on("ZoneAlarmRaised", showZoneAlarm);
+      connection.on("InsightReady", showInsight);
 
       connection.onreconnected(() =>
         connection.invoke("WatchArea", "Sector 7 Foundry"),

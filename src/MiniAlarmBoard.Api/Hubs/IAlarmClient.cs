@@ -6,4 +6,5 @@ public interface IAlarmClient
 {
     Task AlarmRaised(Alarm alarm);
     Task ZoneAlarmRaised(ZoneAlarm zoneAlarm);
+    Task InsightReady(AlarmInsight insight);
 }

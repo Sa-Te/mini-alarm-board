@@ -3,6 +3,7 @@ using MiniAlarmBoard.Api.Storage;
 using MiniAlarmBoard.Api.Models;
 using MiniAlarmBoard.Api.Hubs;
 using MiniAlarmBoard.Api.Detection;
+using MiniAlarmBoard.Api.Insights;
 
 namespace MiniAlarmBoard.Api.Services;
 
@@ -20,13 +21,15 @@ public class AlarmGenerator : BackgroundService
     private readonly ILogger<AlarmGenerator> _logger;
     private readonly IHubContext<AlarmHub, IAlarmClient> _hub;
     private readonly IZoneDetector _detector;
+    private readonly IAlarmInsightService _insights;
 
-    public AlarmGenerator(IAlarmStore store, IHubContext<AlarmHub, IAlarmClient> hub, ILogger<AlarmGenerator> logger, IZoneDetector zoneDetector)
+    public AlarmGenerator(IAlarmStore store, IHubContext<AlarmHub, IAlarmClient> hub, IZoneDetector zoneDetector, IAlarmInsightService insights, ILogger<AlarmGenerator> logger)
     {
         _store = store;
         _logger = logger;
         _hub = hub;
         _detector = zoneDetector;
+        _insights = insights;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -51,6 +54,11 @@ public class AlarmGenerator : BackgroundService
             if (zoneAlarm is not null)
             {
                 await _hub.Clients.Group(zoneAlarm.Area).ZoneAlarmRaised(zoneAlarm);
+
+                var recentAlarms = _store.GetByAreaSince(zoneAlarm.Area, zoneAlarm.WindowStart);
+                var insight = await _insights.ExplainAsync(zoneAlarm, recentAlarms, stoppingToken);
+
+                await _hub.Clients.Group(insight.Area).InsightReady(insight);
             }
 
             _logger.LogInformation("Raised {Tag} in {Area}", alarm.TagName, alarm.Area);
