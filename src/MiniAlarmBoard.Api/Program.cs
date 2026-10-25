@@ -5,7 +5,6 @@ using MiniAlarmBoard.Api.Hubs;
 using MiniAlarmBoard.Api.Detection;
 using MiniAlarmBoard.Api.Insights;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -19,7 +18,22 @@ builder.Services.AddSignalR();
 builder.Services.Configure<ZoneDetectorOptions>(builder.Configuration.GetSection(ZoneDetectorOptions.SectionName));
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton<IZoneDetector, InMemoryZoneDetector>();
-builder.Services.AddSingleton<IAlarmInsightService, RuleBasedAlarmInsightService>();
+
+builder.Services.AddHttpClient();
+builder.Services.AddSingleton<RuleBasedAlarmInsightService>();
+
+if (string.IsNullOrWhiteSpace(builder.Configuration["Insights:ApiKey"]))
+{
+    builder.Services.AddSingleton<IAlarmInsightService>(sp => sp.GetRequiredService<RuleBasedAlarmInsightService>());
+}
+else
+{
+    builder.Services.AddSingleton<GeminiAlarmInsightService>();
+    builder.Services.AddSingleton<IAlarmInsightService>(sp => new FallbackAlarmInsightService(
+        sp.GetRequiredService<GeminiAlarmInsightService>(),
+        sp.GetRequiredService<RuleBasedAlarmInsightService>(),
+        sp.GetRequiredService<ILogger<FallbackAlarmInsightService>>()));
+}
 
 
 var app = builder.Build();
